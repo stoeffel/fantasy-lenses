@@ -37,4 +37,12 @@ PartialLens.arrayLens = function(index) {
     });
 };
 
+PartialLens.fromArray = function(props) {
+    return props.reduce((prev, next) =>
+        prev.andThen(
+            typeof next === 'string'? PartialLens.objectLens(next) : PartialLens.arrayLens(next)
+        ), PartialLens.id()
+    );
+};
+
 module.exports = PartialLens;

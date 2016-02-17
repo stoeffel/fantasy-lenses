@@ -21,6 +21,8 @@ var person = {
     locationLens = objectLens('location'),
     numberLens = objectLens('number'),
     store = locationLens.andThen(numberLens).run(person);
+    // or
+    // store = Lens.fromArray(['location', 'number'])
 
 console.log(store.get());
 // 1006
@@ -50,6 +52,8 @@ var data = [{
     configLens = objectLens('config'),
     typeLens = objectLens('type'),
     configTypeLens = configLens.andThen(typeLens);
+    // or
+    // configTypeLens = Lens.fromArray(['config', 'type'])
 
 console.log(data.filter(function(o) {
     return configTypeLens.run(o).fold(

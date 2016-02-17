@@ -78,10 +78,60 @@ exports.testUpdatePersonFirstSkill = function(test) {
     test.done();
 };
 
+exports.testUpdatePersonFirstSkillFromArray = function(test) {
+    var store = Lens.fromArray(['skills', 0]).run(person);
+
+    test.equal(store.get(), 'JavaScript');
+    test.deepEqual(
+        store.set('Haskell'),
+        {
+            name: 'Brian McKenna',
+            skills: [
+                'Haskell',
+                'Scala'
+            ],
+            location: {
+                number: 1006,
+                street: 'Pearl St',
+                postcode: 80302
+            }
+        }
+    );
+    test.done();
+};
+
+
 exports.testNestedFilter = function(test) {
     var config = PartialLens.objectLens('config'),
         type = PartialLens.objectLens('type'),
         configType = config.andThen(type),
+        result = data.filter(function(d) {
+            return configType.run(d).fold(
+                function(store) {
+                    return store.get() == 2;
+                },
+                function() {
+                    return false;
+                }
+            );
+        });
+
+    test.deepEqual(
+        result,
+        [
+            {
+                name: 'First record',
+                config: {
+                    type: 2
+                }
+            }
+        ]
+    );
+    test.done();
+};
+
+exports.testNestedFilterFromArray = function(test) {
+    var configType = PartialLens.fromArray(['config', 'type']),
         result = data.filter(function(d) {
             return configType.run(d).fold(
                 function(store) {

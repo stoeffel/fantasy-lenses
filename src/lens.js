@@ -49,4 +49,12 @@ Lens.arrayLens = function(index) {
     });
 };
 
+Lens.fromArray = function(props) {
+    return props.reduce((prev, next) =>
+        prev.andThen(
+            typeof next === 'string' ?  Lens.objectLens(next) : Lens.arrayLens(next)
+        ), Lens.id()
+    );
+};
+
 module.exports = Lens;
